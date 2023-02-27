@@ -24,6 +24,9 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.search.poi.PoiSearch;
+import com.baidu.mapapi.search.sug.SuggestionSearch;
+import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.Arguments;
@@ -66,7 +69,11 @@ public class GeolocationModule extends BaseModule
         option.setIsNeedAltitude(true);
         option.setIsNeedLocationDescribe(true);
         option.setOpenGps(true);
-        locationClient = new LocationClient(context.getApplicationContext());
+        try {
+            locationClient = new LocationClient(context.getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         locationClient.setLocOption(option);
         Log.i("locationClient", "locationClient");
         locationClient.registerLocationListener(this);
@@ -144,8 +151,27 @@ public class GeolocationModule extends BaseModule
 
     @ReactMethod
     public void geocode(String city, String addr) {
-        getGeoCoder().geocode(new GeoCodeOption()
-                .city(city).address(addr));
+//        getGeoCoder().geocode(new GeoCodeOption()
+//                .city(city).address(addr));
+        PoiSearch mPoiSearch = PoiSearch.newInstance();
+        SuggestionSearch mSuggestionSearch = SuggestionSearch.newInstance();
+        mSuggestionSearch.requestSuggestion(new SuggestionSearchOption().keyword(""));
+//        mSuggestionSearch.setOnGetSuggestionResultListener(new OnGetSuggestionResultListener() {
+//            @Override
+//            public void onGetSuggestionResult(SuggestionResult suggestionResult) {
+//                if (suggestionResult == null || suggestionResult.getAllSuggestions() == null) {
+//                    return;
+//                }
+//                suggest = new ArrayList<String>();
+//                for (SuggestionResult.SuggestionInfo info : suggestionResult.getAllSuggestions()) {
+//                    if (info.key != null) {
+//                        suggest.add(info.key);
+//                    }
+//                }
+//
+//                Logger.e(suggest.toString());
+//            }
+//        });
     }
 
     @ReactMethod

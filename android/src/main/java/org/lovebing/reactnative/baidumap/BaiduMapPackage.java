@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi;
 import java.util.Arrays;
 import java.util.List;
 
+import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
@@ -37,6 +38,7 @@ public class BaiduMapPackage implements ReactPackage {
 
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+        init(reactContext);
         return Arrays.asList(
                 new BaiduMapManager(reactContext),
                 new GeolocationModule(reactContext),
@@ -49,7 +51,6 @@ public class BaiduMapPackage implements ReactPackage {
     @Override
     public List<ViewManager> createViewManagers(
             ReactApplicationContext reactContext) {
-        init(reactContext);
         return Arrays.asList(
                 new MapViewManager(),
                 new OverlayClusterManager(),
@@ -70,6 +71,8 @@ public class BaiduMapPackage implements ReactPackage {
         if (Looper.myLooper() == null){
             Looper.prepare();
         }
+        SDKInitializer.setAgreePrivacy(reactContext.getApplicationContext(), true);
         SDKInitializer.initialize(reactContext.getApplicationContext());
+        SDKInitializer.setCoordType(CoordType.BD09LL);
     }
 }
